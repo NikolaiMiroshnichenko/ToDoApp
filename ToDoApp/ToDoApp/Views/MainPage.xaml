@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters ="clr-namespace:ToDoApp.Converter" xmlns:viewmodels="clr-namespace:ToDoApp.ViewModels"
+             x:Class="ToDoApp.Views.MainPage"             
+             Title="{Binding Title}">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:ToDoStatusToColorConverter x:Key="ToDoStatusToColorConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.BindingContext>
+        <viewmodels:MainViewModel x:Name="ViewModel"/>
+    </ContentPage.BindingContext>
+    <AbsoluteLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
+                    AbsoluteLayout.LayoutFlags="All">
+        <ListView ItemsSource="{Binding ToDoItems}"
+                  BackgroundColor="White"
+                  AbsoluteLayout.LayoutBounds="0,0,1,1"
+                  AbsoluteLayout.LayoutFlags="All"
+                  CachingStrategy="RetainElement"
+                  ItemTapped="ListView_ItemTapped"
+                  x:Name="ToDoListView"
+                  HasUnevenRows="True"
+                  SeparatorVisibility="None"
+                  IsPullToRefreshEnabled="True"
+                  RefreshCommand="{Binding ToDoItemsRefreshCommands}"
+                  IsRefreshing="{Binding IsRefreshing}">
+            <ListView.Header>
+                <AbsoluteLayout BackgroundColor="White"
+                                Padding="0,0,0,20"
+                                HeightRequest="270">
+                    <Image Source="https://www.bumpylands.com/static/media/uploads/blog/tour/abroad/mountains.jpg"
+                           HorizontalOptions="FillAndExpand"
+                           Aspect="AspectFill"
+                           AbsoluteLayout.LayoutBounds="0,0,1,250"
+                           AbsoluteLayout.LayoutFlags="PositionProportional, WidthProportional" />
+                    <StackLayout BackgroundColor="Black" Opacity="0.4"
+                                 AbsoluteLayout.LayoutBounds="0,0,1,250"
+                                 AbsoluteLayout.LayoutFlags="PositionProportional, WidthProportional">
+                    </StackLayout>
+                    <Label Text="{Binding CurrentTime, StringFormat='{0:HH:mm}'}"
+                           TextColor="White"
+                           FontSize="35"
+                           AbsoluteLayout.LayoutBounds="0.5,0.35,0.25,0.2"
+                           AbsoluteLayout.LayoutFlags="All"/>
+                    <Button  Command="{Binding CreateToDoCommand}"
+                                 Text="Add activity"
+                                 TextColor="White"
+                                 BackgroundColor="{StaticResource NewToDoBlue}"
+                                 AbsoluteLayout.LayoutBounds="0.5,1,0.35,0.15"
+                                 AbsoluteLayout.LayoutFlags="All"
+                                 CornerRadius="50"/>
+                </AbsoluteLayout>
+            </ListView.Header>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell Height="100">
+                        <ViewCell.ContextActions>
+                            <MenuItem Text="Delete"
+                                      Command="{Binding Source={x:Reference ViewModel}, 
+                                                        Path=DeleteToDoItemCommand}"
+                                      CommandParameter="{Binding .}"/>
+                        </ViewCell.ContextActions>
+                        <AbsoluteLayout AbsoluteLayout.LayoutBounds="0,0,1,1"
+                                    AbsoluteLayout.LayoutFlags="All"
+                                    Margin="0,8,0,8">
+                            <Frame BorderColor="LightGray"                            
+                               AbsoluteLayout.LayoutBounds="0,0,1,1"
+                               AbsoluteLayout.LayoutFlags="All">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Text="{Binding Text}" 
+                                           HorizontalOptions="Center"
+                                           FontSize="Medium"
+                                           TextColor="Black"
+                                           Grid.Column="1"/>
+                                    <Label Text="{Binding Time,StringFormat='{0:dd-MM-yyyy}'}"
+                                           HorizontalOptions="EndAndExpand"
+                                           Grid.Column="2"/>
+                                </Grid>
+                            </Frame>
+                            <BoxView Color="{Binding Path=Status, 
+                                                 Converter={StaticResource ToDoStatusToColorConverter }}"
+                                     HorizontalOptions="StartAndExpand"                                 
+                                     AbsoluteLayout.LayoutBounds="0,0,5,1"
+                                     AbsoluteLayout.LayoutFlags="PositionProportional, HeightProportional"/>
+                        </AbsoluteLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <Label AbsoluteLayout.LayoutBounds="0.5,0.6,1,50"
+               HorizontalOptions="Center"
+               AbsoluteLayout.LayoutFlags="PositionProportional, WidthProportional"
+               Text="No available items to display..."
+               FontSize="Body"
+               IsVisible="{Binding IsToDoItemsListEmpty}" />
+    </AbsoluteLayout>        
+</ContentPage>

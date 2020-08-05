@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:elements="clr-namespace:ToDoApp.Elements" 
+             xmlns:viewmodels="clr-namespace:ToDoApp.ViewModels"
+             mc:Ignorable="d"
+             x:Class="ToDoApp.Views.CreateToDoView"
+             Title="{Binding Title}">
+    <ContentPage.BindingContext>
+        <viewmodels:CreateToDoViewModel/>
+    </ContentPage.BindingContext>
+    <ContentPage.Content>        
+        <StackLayout Padding="0,70,0,0">
+            <StackLayout Padding="10,0">
+                <Label Text="Pick Date"
+                   FontSize="Body"/>
+                <DatePicker Date="{ Binding Time}" />
+                <Label Text="Text:"
+                   FontSize="Body"/>
+                <Entry Text="{Binding Text, Mode=TwoWay}"/>
+            </StackLayout>
+            
+            <elements:NonCapsTextButton Text="Create"
+                                        Margin="0,0,0,-1"
+                                        Command="{Binding CreateCommand}"
+                                        TextColor="{StaticResource WhiteTextButton}"
+                                        BackgroundColor="{StaticResource NewToDoBlue}"
+                                        VerticalOptions="EndAndExpand"
+                                        FontSize="Large"/>
+        </StackLayout>    
+    </ContentPage.Content>
+</ContentPage>
